@@ -83,18 +83,22 @@ router.get("/posts/:id/edit", async function (req, res) {
   res.render("update-post", { post: post });
 });
 
-router.post("/posts/:id/edit", async function(req,res) {
+router.post("/posts/:id/edit", async function (req, res) {
   const postId = new ObjectId(req.params.id);
-  db.getDb().collection("posts").updateOne({ _id: postId}, { $set: {
-    title: req.body.title,
-    summary: req.body.summary,
-    body: req.body.content
-    },
-  }
-);
-
-
-
-
+  const result = await db
+    .getDb()
+    .collection("posts")
+    .updateOne(
+      { _id: postId },
+      {
+        $set: {
+          title: req.body.title,
+          summary: req.body.summary,
+          body: req.body.content,
+        },
+      },
+    );
+  res.redirect("/posts");
+});
 
 module.exports = router;
